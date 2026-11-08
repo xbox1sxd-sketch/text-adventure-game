@@ -1,15 +1,14 @@
-import js
 import os
 import random
 import time
 
-def input(prompt=""):
-    return js.prompt(prompt)
-
 _system = os.system
 def _portable_system(command):
-    if command == "cls" and os.name != "nt":
-        command = "clear"                    
+    if command == "cls":
+        if os.name != "nt":
+            # If on web or Mac/Linux, use ANSI escape code to clear
+            print("\033[H\033[J", end="")
+            return 0
     return _system(command)
 os.system = _portable_system
 
@@ -44,8 +43,14 @@ def input_type(text, delay=0.03):
 
         print(letter, end="", flush=True)
         time.sleep(delay)
-
-    return input()
+    try:
+        import js
+        # Use the browser's native pop-up box
+        res = js.prompt("")
+        return res if res is not None else ""
+    except ImportError:
+        # Use normal terminal input if playing locally
+        return input()
 
 
 type_print("\n\nWelcome to my text based Adventure Game!")
