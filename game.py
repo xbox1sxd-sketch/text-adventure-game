@@ -1,7 +1,10 @@
-
+import js
 import os
 import random
 import time
+
+def input(prompt=""):
+    return js.prompt(prompt)
 
 _system = os.system
 def _portable_system(command):
